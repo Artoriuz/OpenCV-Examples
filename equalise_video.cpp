@@ -3,9 +3,9 @@
 using namespace cv;
 using namespace std;
 
-int main(void) {
+int main(int argc, char** argv) {
 	Mat img, img_eql, hist, hist_eql;
-	VideoCapture cap("E:/Torrents/[FroZen]_RAINBOW_01_[F3438D64].mkv");
+	VideoCapture cap(argv[1]);
 	while (true) {
 		cap >> img;
 		cvtColor(img, img, CV_BGR2GRAY);
