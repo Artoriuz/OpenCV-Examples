@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 	
 	difference = Mat::zeros(height, width, CV_8UC1);
 
-	while (1) {
+	while (true) {
 		cap >> frame;
 		cvtColor(frame, frame, CV_BGR2GRAY);
 		

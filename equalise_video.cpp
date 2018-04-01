@@ -6,7 +6,7 @@ using namespace std;
 int main(void) {
 	Mat img, img_eql, hist, hist_eql;
 	VideoCapture cap("E:/Torrents/[FroZen]_RAINBOW_01_[F3438D64].mkv");
-	while (1) {
+	while (true) {
 		cap >> img;
 		cvtColor(img, img, CV_BGR2GRAY);
 		equalizeHist(img, img_eql);
