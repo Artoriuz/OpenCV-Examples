@@ -25,7 +25,9 @@ void menu() {
 }
 
 int main(int argvc, char** argv) {
-	VideoCapture video("E:/Torrents/[FroZen]_RAINBOW_01_[F3438D64].mkv");
+	VideoCapture video(argv[1]); //use this for videos
+	//cap = imread(argv[1]); //use this for images
+	
 	float media[] = { 1,1,1,1,1,1,1,1,1 };
 	float gauss[] = { 1,2,1,2,4,2,1,2,1 };
 	float horizontal[] = { -1,0,1,-2,0,2,-1,0,1 };
@@ -33,32 +35,34 @@ int main(int argvc, char** argv) {
 	float laplacian[] = { 0,-1,0,-1,4,-1,0,-1,0 };
 
 	Mat cap, frame, frame32f, frameFiltered, frameFiltered2;
-	Mat mask(3, 3, CV_32F), mask1, mask_gauss(3, 3, CV_32F), mask_lap(3, 3, CV_32F);
+	Mat mask(3, 3, CV_32F), mask_gauss(3, 3, CV_32F), mask_lap(3, 3, CV_32F);
 	Mat result, result1, result_lapgauss;
 	double width, height, min, max;
 	bool lap_gauss_aux = false, absolut = true;
 	char key;
 
-	width = video.get(CV_CAP_PROP_FRAME_WIDTH);
-	height = video.get(CV_CAP_PROP_FRAME_HEIGHT);
-	std::cout << "largura=" << width << "\n";;
-	std::cout << "altura =" << height << "\n";;
+	width = video.get(CV_CAP_PROP_FRAME_WIDTH); //use this for videos
+	height = video.get(CV_CAP_PROP_FRAME_HEIGHT); //use this for videos
+	//width = cap.cols; //use this for images
+	//height = cap.rows; //use this for images
 
-	namedWindow("filtroespacial", 1);
+	std::cout << "width = " << width << "\n";;
+	std::cout << "height = " << height << "\n";;
+
+	namedWindow("spacialfilter", 1);
 
 	mask_gauss = Mat(3, 3, CV_32F, gauss);
 	scaleAdd(mask_gauss, 1 / 16.0, Mat::zeros(3, 3, CV_32F), mask_gauss);
 	mask_lap = Mat(3, 3, CV_32F, laplacian);
-	scaleAdd(mask_lap, 1, Mat::zeros(3, 3, CV_32F), mask_lap);
 
 	mask = Mat(3, 3, CV_32F, media);
-	scaleAdd(mask, 1 / 9.0, Mat::zeros(3, 3, CV_32F), mask1);
-	swap(mask, mask1);
+	scaleAdd(mask, 1 / 9.0, Mat::zeros(3, 3, CV_32F), mask);
+	swap(mask, mask);
 
 	menu();
 	
-	while (1) {
-		video >> cap;
+	while (true) {
+		video >> cap; //comment this when using images as input
 		cvtColor(cap, frame, CV_BGR2GRAY);
 		imshow("original", frame);
 		frame.convertTo(frame32f, CV_32F);
@@ -72,7 +76,7 @@ int main(int argvc, char** argv) {
 			frameFiltered2 = abs(frameFiltered2);
 			frameFiltered2.convertTo(result_lapgauss, CV_8U);
 
-			imshow("filtroespacial", result_lapgauss);
+			imshow("spacialfilter", result_lapgauss);
 
 		} else {
 			filter2D(frame32f, frameFiltered, frame32f.depth(), mask, Point(1, 1), 0);
@@ -80,7 +84,7 @@ int main(int argvc, char** argv) {
 				frameFiltered = abs(frameFiltered);
 			}
 			frameFiltered.convertTo(result, CV_8U);
-			imshow("filtroespacial", result);
+			imshow("spacialfilter", result);
 		}
 			
 		if (key == 27) break; // esc pressed!
@@ -100,9 +104,8 @@ int main(int argvc, char** argv) {
 			break;
 		case 'g':
 			menu();
-			mask = Mat(3, 3, CV_32F, gauss);
-			scaleAdd(mask, 1 / 16.0, Mat::zeros(3, 3, CV_32F), mask);
-			printmask(mask);
+			mask = mask_gauss;
+			printmask(mask_gauss);
 			lap_gauss_aux = false;
 			break;
 		case 'h':
