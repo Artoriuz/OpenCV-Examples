@@ -3,12 +3,12 @@
 
 using namespace cv;
 
-int main(void) {
+int main(int argc, char **argv) {
 	int nClusters = 12;
 	Mat rotulos;
 	int nRodadas = 1;
 	Mat centros;
-	Mat img = imread("E:/Pictures/PS/Sources/gbf_image.png");
+	Mat img = imread(argv[1]);
 	Mat samples(img.rows * img.cols, 3, CV_32F);
 
 	for (int i = 0; i < 10; i++) {
@@ -40,7 +40,6 @@ int main(void) {
 		}
 		imshow("clustered image", rotulada);
 		waitKey();
-		imwrite("E:/Documents-bkp/UFRN/P8/processamento digital de imagens/site/images/kmeans/output.png", rotulada);
 	}
 return 0;
 }
